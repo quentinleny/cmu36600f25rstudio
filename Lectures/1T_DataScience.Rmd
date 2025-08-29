@@ -1,0 +1,324 @@
+---
+title: "Introduction to Statistical Learning"
+author: "36-600"
+output:
+  xaringan::moon_reader:
+    nature:
+      ratio: '16:9'
+      beforeInit: "macros.js"
+---
+layout: true
+background-image: url(background.png)
+background-size: cover
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 16px;
+    padding: 1em 4em 1em 4em;
+}
+a { 
+    color: blue; 
+}
+.remark-slide-content h1 {
+    font-family: cabin;
+}
+.remark-slide-content h2 {
+    font-family: cabin;
+}
+.remark-slide-content h3 {
+    font-family: cabin;
+}
+.remark-slide-number {
+    font-size: 8pt;
+    margin-bottom: -5.6px;
+    margin-right: 1145px;
+    color: #FFFFFF;
+    opacity: 1;
+}
+.remark-code {
+    font-size: 16px;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 65% !important;
+}
+</style>
+
+```{css,echo=FALSE}
+table {
+  font-size: 12px;
+}
+```
+
+
+## What is Artificial Intelligence?
+
+<br><br>
+
+.pull-left[
+- There is no unique definition, but I am partial to the following description:
+
+  + *AI is an* **idea**. *It is the simulation of intelligent behavior by computers*
+
+- And, so...
+
+  + *Data science provides the tools and algorithms to implement the idea*
+
+- Thus statistics, all of it (importantly, even classic and simple techniques like linear regression!), lies within AI
+]
+
+.pull-right[
+  ![](./ai.png)
+]
+
+
+---
+
+## Data Science
+
+.center[
+![:scale 40%](./data_science.png)
+]
+
+- Credit: Computer Science Department, Luther College
+
+
+---
+
+## Unstructured vs. Structured Data
+
+<br>
+
+.center[
+![:scale 80%](./unstructured_data.png)
+]
+
+
+---
+
+## Unstructured vs. Structured Data
+
+- This is an example of *structured data*:
+
+<br>
+
+.center[
+![:scale 80%](./structured_data.png)
+]
+
+<br>
+
+- Every row represents an observational unit, i.e., an object of study (here, a patient)
+
+- Every column represents a measurement made for that patient (here, the cost of hospitalization, age, gender, etc.)
+
+- The number of rows is the *sample size*, conventionally denoted $n$
+
+- We often denote the number of columns (or the number that we're *using*) by $p$
+
+
+---
+
+## Structured Data: Data Types
+
+- Let's look at our structured data again:
+
+<br>
+
+.center[
+![:scale 60%](./structured_data.png)
+]
+
+<br>
+
+- We see that these data are of different types.
+
+  + Some data are quantitative and *effectively* continuous (e.g., `Cost` and `Age`)
+
+  + Some data are quantitative and discrete (e.g., `Interventions`)
+
+  + And some data are *categorical* or *factors* (e.g., `Gender`)
+
+  + `Complications` is interesting example, because it is actually categorical: it has the values `0` (mapping to no) and `1` (mapping to yes)
+
+
+---
+
+## The Canonical Data Analysis Workflow
+
+<br>
+
+.center[
+![:scale 80%](./workflow.png)
+]
+
+<br>
+
+- *Data Pre-Processing*: the act of creating a structured data table from unstructured sources (e.g., images, audio files, text, etc.), as well as the act of editing the data table to mitigate missing data and outliers, etc.
+
+- *Exploratory Data Analysis*: the act of visualizing our structured data -- via, e.g., histograms, scatter plots, box plots, etc. -- so as to build intuition about them.  No statistical modeling is involved.  EDA is not a substitute for statistical modeling, due to its implicit dimensionality reduction!
+
+- *Statistical Learning*: the attempt to find meaningful structures in the data or to uncover relationships between elements of the dataset
+
+- *Interpretation*: what did you discover during your analysis?
+
+
+---
+
+## What is a Statistical Model?
+
+- A *statistical model* is a representation of the data-generating process 
+
+  + this representation may be mathematical in form (as in, e.g., linear regression), or it may be algorithmic in nature (as in, e.g., random forest)
+
+- To be clear: a statistical model is **not** a function in a software package!
+
+
+---
+
+## Unsupervised Statistical Learning
+
+- The setting for *unsupervised learning* is that we have a collection of:
+
+  + $p$ measurements (recorded in columns of a data table), for each of... 
+  
+  + $n$ objects (recorded in rows of a data table)
+  
+- "Unsupervised" means that we are not attempting to learn a prediction model
+
+  + rather, we are attempting to uncover structure in the data via clustering, segmentation algorithms, myriad other tools...
+
+- We often don't write down mathematical forms of unsupervised learning models detailed explicitly, but it *could* look something like
+
+$$
+c \mid \mathbf{x} = f(\mathbf{x}) + \epsilon \,,
+$$
+
+  + $c \mid \mathbf{x}$ represents the value of an unobserved label $c$ (such as "Cluster 1") *given* a set of data values $\mathbf{x}$
+  
+  + $\epsilon$ represents the "error term," i.e., the random variation (accounting, e.g., for the fact that perhaps not all data that we assign to "Cluster 1" actually belong to that cluster)
+
+
+---
+
+## Supervised Statistical Learning
+
+- The setting for *supervised learning* is that we have a collection of...
+
+  + $p+1$ measurements (recorded in columns of a data table), for each of $n$ objects (recorded in rows of a data table)
+  
+- Of the $p+1$ measurements...
+
+  + $p$ comprise the *predictor* (or *independent*) variables and...
+
+  + $1$ is the *response* (or *dependent*) variable
+
+- The goal is to determine if there are associations between (subsets of) the predictor variables and the response variable, while noting that "association is not causation"
+
+- We might then write the statistical model as
+
+$$
+y \mid \mathbf{x} = f(\mathbf{x}) + \epsilon \,,
+$$
+
+  + $f(\cdot)$ is a deterministic function that represents the average observed value of $y$, given $\mathbf{x} = \{x_1,\,\ldots,\,x_p\}$
+  
+  + $\epsilon$ is once again an "error", which we often assume is randomly sampled from some distribution, like the normal distribution
+  
+- Predicted response values are given by
+
+$$
+\widehat{y\,}\mid \mathbf{x} = \widehat{f}(\mathbf{x}) \,
+$$
+
+  + the *hats* indicate estimated quantities
+
+
+---
+
+## An Overarching Question for Supervised Learning: Inference...or Prediction?
+
+- *Inference*: learning a supervised model and then examining and interpreting it
+
+  + "adding one to the number of comorbidities leads to this amount of increased cost, on average"
+
+- *Prediction*: learning a supervised model and then treating it as a black box
+
+  + "what is the average total insurance claim for a 60-year-old female with one intervention, no prescribed drugs, three ER visits, no complications, no comorbidities, and with a treatment duration of 100 days?"
+
+- The distinction matters because it impacts the possible suite of models that we can apply
+
+.center[
+  ![:scale 70%](./infpred.png)
+]
+
+  + "specified functions": functions you can write down yourself, on paper (e.g., linear regression)
+
+  + "learned functions": functions a machine learns via an algorithm, given data (e.g., random forest)
+
+
+---
+
+## So Now: What is Machine Learning, Anyway?
+
+<br>
+
+.center[
+![:scale 45%](./ai2.png)
+]
+
+<br>
+
+- It is the idea of constructing *data-driven* algorithms that: 
+
+  + learn the joint structure and/or behavior of some/all variables in a dataset, or
+
+  + learn the mapping between the predictor variables in a dataset and the response variable
+
+- But, specifically, in either case, making few/no assumptions on parametric form for the joint structure/mapping *a priori*, even if it is possible (as it is, sometimes) to write one down *a posteriori*; we would only make somewhat weaker assumptions
+
+- Machine learning is not its own "thing" separate from the rest of the data analysis enterprise!
+
+
+---
+
+## What Should I Take Away From the Course?
+
+- The overarching question: given data, can you perform basic analyses, and better yet, properly interpret the results of these analyses, and even better yet, *explain these analyses and their results to others*?
+
+- This *is not* a course about the theory behind, and the mathematics of, statistical learning!
+
+- This *is* a course about context: how do the elements of the analysis workflow all fit together, on a (mostly) *qualitative* level?  *Can you explain your analyses in words while standing in front of a poster or in a conference room?*
+
+- That you shouldn't be a machine learning snob
+
+  + if the true association between the predictor variables and the response variable is a linear association, then linear regression will be the best statistical model to learn!
+
+
+---
+
+## OK, I Want to Do This...
+
+- Of course you do
+
+- Let's learn about `R`, then
+
+  + see [this web page](https://cmu-intro-r.github.io)
+
+  + your question: "Why not [insert programming language/platform here]?"
+
+- My answer:
+
+  + `R` and `RStudio` are both free and extremely easy to install and maintain
+
+  + The curve for learning how to analyze data is not steep, even for those with little programming experience
+
+  + And `R` does everything a statistician wants to do, via functions in its base packages or in its 20,000+ contributed packages
+
+- The only advantage to, e.g., `Python` is computational efficiency for big data
+
+- If you ask "Why not `Excel`?" you will be removed from the class roster and placed on academic probation
+
+- So let's get started: you'll need R, RStudio, and to make life easy, a $\LaTeX$ distribution
+
+
